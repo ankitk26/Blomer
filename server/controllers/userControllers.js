@@ -58,7 +58,6 @@ const getUser = async (req, res) => {
   } catch (err) {
     res.status(400).json({ msg: err.message });
   }
-  res.send("Get user");
 };
 
 module.exports = { registerUser, loginUser, getUser, getUsers };

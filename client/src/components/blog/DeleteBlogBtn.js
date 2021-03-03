@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { deleteBlog } from "../../redux/reducers/blogReducer";
+import { delete_blog } from "../../redux/reducers/blogReducer";
 
 const customStyles = {
   content: {
@@ -30,7 +30,7 @@ const DeleteBlogBtn = ({ id }) => {
   const closeModal = () => setIsOpen(false);
 
   const handleDelete = () => {
-    dispatch(deleteBlog(id));
+    dispatch(delete_blog(id));
     history.push("/");
   };
 

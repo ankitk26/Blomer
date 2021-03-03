@@ -15,7 +15,7 @@ const FormControl = ({ htmlFor, type, value, onChange, error }) => {
         placeholder={htmlFor}
         onChange={(e) => onChange(e.target.value)}
       />
-      <span className="text-red-600">{error && error}</span>
+      <span className="text-sm font-bold text-red-600">{error && error}</span>
     </div>
   );
 };

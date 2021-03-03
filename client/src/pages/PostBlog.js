@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
-import { addBlog } from "../redux/reducers/blogReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { add_blog } from "../redux/reducers/blogReducer";
 
 const PostBlog = (props) => {
   const [blog, setBlog] = useState({
@@ -11,6 +10,7 @@ const PostBlog = (props) => {
   });
 
   const dispatch = useDispatch();
+  const { blogErrors } = useSelector((state) => state.root.blogs);
 
   const handleChange = (e) => {
     setBlog({ ...blog, [e.target.name]: e.target.value });
@@ -18,13 +18,13 @@ const PostBlog = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const id = uuidv4();
-    dispatch(addBlog({ id, ...blog }));
+    dispatch(add_blog(blog));
     props.history.push("/");
   };
 
   return (
     <div>
+      <h1>{blogErrors && blogErrors}</h1>
       <h1 className="text-2xl">Post new blog</h1>
       <form onSubmit={handleSubmit} className="flex flex-col items-start mt-5">
         <div className="flex flex-col w-full my-5 mt-0">
@@ -33,11 +33,12 @@ const PostBlog = (props) => {
             type="text"
             id="heading"
             name="heading"
-            className="form-control-blog"
+            className={`form-control-blog ${blogErrors && "border border-red-600 text-red-600"}}`}
             value={blog.heading}
             placeholder="Heading of the blog"
             onChange={handleChange}
           />
+          <span className="mt-2 text-sm font-bold text-red-600">{blogErrors && blogErrors.heading}</span>
         </div>
         <div className="flex flex-col w-full">
           <label htmlFor="subheading">Subheading</label>
@@ -56,11 +57,12 @@ const PostBlog = (props) => {
           <textarea
             id="body"
             name="body"
-            className="form-control-blog h-36"
+            className={`form-control-blog h-36 ${blogErrors && "border border-red-600 text-red-600"}}`}
             placeholder="Body of the blog"
             value={blog.body}
             onChange={handleChange}
           />
+          <span className="mt-2 text-sm font-bold text-red-600">{blogErrors && blogErrors.body}</span>
         </div>
         <button type="submit" className="mt-5 btn-purple">
           Add blog

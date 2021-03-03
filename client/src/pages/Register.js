@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import FormControl from "../components/authPages/FormControl";
-import { register_user } from "../redux/reducers/userReducer";
+import { clearErrors, register_user } from "../redux/reducers/userReducer";
 
 const Register = (props) => {
   const [email, setEmail] = useState("");
@@ -16,12 +16,15 @@ const Register = (props) => {
     if (isAuthenticated) {
       props.history.push("/");
     }
+
+    return () => {
+      dispatch(clearErrors());
+    };
   }, [isAuthenticated, props.history]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(register_user({ email, username, password }));
-    console.log({ email, username, password });
   };
 
   return (

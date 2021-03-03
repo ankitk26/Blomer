@@ -19,7 +19,14 @@ const userSlice = createSlice({
       state.loading = false;
       state.user = action.payload;
     },
-    registerUser: (state, action) => {
+    registerSuccess: (state, action) => {
+      localStorage.setItem("token", action.payload.token);
+      state.isAuthenticated = true;
+      state.loading = false;
+      state.token = action.payload.token;
+      state.errors = null;
+    },
+    loginSuccess: (state, action) => {
       localStorage.setItem("token", action.payload.token);
       state.isAuthenticated = true;
       state.loading = false;
@@ -34,13 +41,30 @@ const userSlice = createSlice({
       state.user = null;
       state.errors = action.payload;
     },
+    loginFail: (state, action) => {
+      localStorage.removeItem("token");
+      state.token = null;
+      state.isAuthenticated = false;
+      state.loading = false;
+      state.user = null;
+      state.errors = action.payload;
+    },
     loadUserFail: (state) => {
       localStorage.removeItem("token");
       state.token = null;
       state.isAuthenticated = false;
       state.loading = false;
       state.user = null;
-      // state.errors = action.payload;
+    },
+    logout: (state) => {
+      localStorage.removeItem("token");
+      state.token = null;
+      state.isAuthenticated = false;
+      state.loading = false;
+      state.user = null;
+    },
+    clearErrors: (state) => {
+      state.errors = null;
     },
   },
 });
@@ -67,15 +91,38 @@ export const register_user = ({ email, username, password }) => async (dispatch)
     };
     const body = JSON.stringify({ email, username, password });
     const res = await axios.post("/users/register", body, config);
-    console.log(res.data);
-    dispatch(registerUser(res.data));
+    dispatch(registerSuccess(res.data));
     dispatch(load_user());
   } catch (err) {
-    // console.log(err.response.data);
     dispatch(registerFail(err.response.data));
   }
 };
 
-export const { loadUser, loadUserFail, registerUser, registerFail } = userSlice.actions;
+export const login_user = ({ email, password }) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const body = JSON.stringify({ email, password });
+    const res = await axios.post("/users/login", body, config);
+    dispatch(loginSuccess(res.data));
+    dispatch(load_user());
+  } catch (err) {
+    dispatch(loginFail(err.response.data));
+  }
+};
+
+export const {
+  loadUser,
+  loadUserFail,
+  registerSuccess,
+  registerFail,
+  loginSuccess,
+  loginFail,
+  logout,
+  clearErrors,
+} = userSlice.actions;
 
 export default userSlice.reducer;

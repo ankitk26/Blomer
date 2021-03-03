@@ -53,7 +53,7 @@ const updateBlog = async (req, res) => {
 const deleteBlog = async (req, res) => {
   const id = req.params.id;
   try {
-    const blog = await Blog.findOneAndDelete(id);
+    const blog = await Blog.findByIdAndDelete(id);
     res.status(200).json(blog);
   } catch (err) {
     res.json({ error: err.message });

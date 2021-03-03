@@ -1,6 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import PrivateRoute from "./components/routing/PrivateRoute";
 import Navbar from "./layouts/Navbar";
 import Blog from "./pages/Blog";
 import Home from "./pages/Home";
@@ -23,10 +24,10 @@ const App = () => {
         <Switch>
           <>
             <div className="w-11/12 mx-auto mt-10">
-              <Route exact path="/" component={Home} />
+              <PrivateRoute exact path="/" component={Home} />
+              <PrivateRoute path="/postblog" component={PostBlog} />
+              <PrivateRoute path="/updateblog/:id" component={UpdateBlog} />
               <Route path="/blogs/:id" component={Blog} />
-              <Route path="/postblog" component={PostBlog} />
-              <Route path="/updateblog/:id" component={UpdateBlog} />
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
             </div>
