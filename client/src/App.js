@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/routing/PrivateRoute";
@@ -9,14 +9,25 @@ import Login from "./pages/Login";
 import PostBlog from "./pages/PostBlog";
 import Register from "./pages/Register";
 import UpdateBlog from "./pages/UpdateBlog";
+import UserBlogs from "./pages/UserBlogs";
+import { load_user, logout } from "./redux/reducers/userReducer";
 import store from "./redux/store";
 import setAuthToken from "./utils/setAuthToken";
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
-
 const App = () => {
+  useEffect(() => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+    store.dispatch(load_user());
+
+    window.addEventListener("storage", () => {
+      if (!localStorage.token) {
+        store.dispatch(logout());
+      }
+    });
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>
@@ -24,12 +35,13 @@ const App = () => {
         <Switch>
           <>
             <div className="w-11/12 mx-auto mt-10">
-              <PrivateRoute exact path="/" component={Home} />
-              <PrivateRoute path="/postblog" component={PostBlog} />
-              <PrivateRoute path="/updateblog/:id" component={UpdateBlog} />
+              <Route exact path="/" component={Home} />
               <Route path="/blogs/:id" component={Blog} />
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
+              <PrivateRoute path="/myblogs" component={UserBlogs} />
+              <PrivateRoute path="/postblog" component={PostBlog} />
+              <PrivateRoute path="/updateblog/:id" component={UpdateBlog} />
             </div>
           </>
         </Switch>

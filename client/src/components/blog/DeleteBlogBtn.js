@@ -31,13 +31,14 @@ const DeleteBlogBtn = ({ id }) => {
 
   const handleDelete = () => {
     dispatch(delete_blog(id));
-    history.push("/");
+    history.push("/myblogs");
   };
 
   return (
     <>
-      <button className="p-0 focus:outline-none" onClick={openModal}>
+      <button className="flex items-center gap-1 p-0 focus:outline-none" onClick={openModal}>
         <i className="text-purple-500 material-icons hover:text-purple-700">delete</i>
+        <span>Delete blog</span>
       </button>
       <Modal isOpen={isOpen} style={customStyles} onRequestClose={closeModal} contentLabel="Delete confirmation modal">
         <button className="float-right focus:outline-none" onClick={closeModal}>

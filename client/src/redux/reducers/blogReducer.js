@@ -1,19 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import setAuthToken from "../../utils/setAuthToken";
 
 const initialState = {
+  allBlogs: null,
   blogs: null,
   blogErrors: null,
   loading: true,
+  current: null,
 };
 
 const blogSlice = createSlice({
   name: "blogs",
   initialState,
   reducers: {
+    getAllBlogs: (state, action) => {
+      state.allBlogs = action.payload;
+      state.loading = false;
+    },
     getBlogs: (state, action) => {
       state.blogs = action.payload;
       state.loading = false;
+    },
+    getBlogById: (state, action) => {
+      state.current = action.payload;
+      state.loading = false;
+    },
+    clearCurrent: (state) => {
+      state.current = null;
     },
     addBlog: (state, action) => {
       state.blogs.push(action.payload);
@@ -41,10 +55,32 @@ const blogSlice = createSlice({
   },
 });
 
+export const get_all_blogs = () => async (dispatch) => {
+  try {
+    const res = await axios.get("/blogs");
+    dispatch(getAllBlogs(res.data));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const get_blogs = () => async (dispatch) => {
   try {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
     const res = await axios.get("/blogs/user");
+    console.log(res.data);
     dispatch(getBlogs(res.data));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const get_blog_by_id = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/blogs/${id}`);
+    dispatch(getBlogById(res.data));
   } catch (err) {
     console.log(err);
   }
@@ -91,6 +127,16 @@ export const update_blog = (blog) => async (dispatch) => {
   }
 };
 
-export const { getBlogs, addBlog, updateBlog, deleteBlog, addBlogError, clearBlogs } = blogSlice.actions;
+export const {
+  getAllBlogs,
+  getBlogs,
+  getBlogById,
+  clearCurrent,
+  addBlog,
+  updateBlog,
+  deleteBlog,
+  addBlogError,
+  clearBlogs,
+} = blogSlice.actions;
 
 export default blogSlice.reducer;

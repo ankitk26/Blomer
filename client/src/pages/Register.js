@@ -14,7 +14,7 @@ const Register = (props) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      props.history.push("/");
+      props.history.push("/myblogs");
     }
 
     return () => {

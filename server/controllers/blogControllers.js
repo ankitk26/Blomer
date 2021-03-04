@@ -16,6 +16,18 @@ const getUserBlogs = async (req, res) => {
     const blogs = await Blog.find({ user: req.user.id });
     res.status(200).json(blogs);
   } catch (err) {
+    console.log(err.message);
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const getBlogById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const blog = await Blog.findById(id);
+    res.status(200).json(blog);
+  } catch (err) {
+    console.log(err.message);
     res.status(400).json({ error: err.message });
   }
 };
@@ -29,7 +41,6 @@ const addBlog = async (req, res) => {
   } catch (err) {
     const errors = handleBlogErrors(err);
     res.status(400).json(errors);
-    // res.status(400).send("error");
   }
 };
 
@@ -45,7 +56,6 @@ const updateBlog = async (req, res) => {
     res.status(200).json(updatedBlog);
   } catch (err) {
     const errors = handleBlogErrors(err);
-    // console.log(err.message);
     res.status(400).json(errors);
   }
 };
@@ -60,4 +70,4 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-module.exports = { getBlogs, getUserBlogs, addBlog, updateBlog, deleteBlog };
+module.exports = { getBlogs, getUserBlogs, getBlogById, addBlog, updateBlog, deleteBlog };

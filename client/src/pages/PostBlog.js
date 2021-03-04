@@ -19,7 +19,7 @@ const PostBlog = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(add_blog(blog));
-    props.history.push("/");
+    props.history.push("/myblogs");
   };
 
   return (
@@ -40,7 +40,7 @@ const PostBlog = (props) => {
           />
           <span className="mt-2 text-sm font-bold text-red-600">{blogErrors && blogErrors.heading}</span>
         </div>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full my-5">
           <label htmlFor="subheading">Subheading</label>
           <input
             type="text"
@@ -52,7 +52,7 @@ const PostBlog = (props) => {
             onChange={handleChange}
           />
         </div>
-        <div className="flex flex-col w-full mt-5">
+        <div className="flex flex-col w-full">
           <label htmlFor="body">Body</label>
           <textarea
             id="body"

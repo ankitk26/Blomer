@@ -70,11 +70,10 @@ const userSlice = createSlice({
 });
 
 export const load_user = () => async (dispatch) => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
-
   try {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
     const res = await axios.get("/users/user");
     dispatch(loadUser(res.data));
   } catch (err) {

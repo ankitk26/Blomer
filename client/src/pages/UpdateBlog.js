@@ -34,7 +34,7 @@ const UpdateBlog = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(update_blog({ id, ...blog }));
-    props.history.push("/");
+    props.history.push("/myblogs");
   };
 
   return (

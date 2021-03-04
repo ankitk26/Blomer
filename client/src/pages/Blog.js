@@ -1,42 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import DeleteBlogBtn from "../components/blog/DeleteBlogBtn";
-import { get_blogs } from "../redux/reducers/blogReducer";
-import { load_user } from "../redux/reducers/userReducer";
+import Spinner from "../layouts/Spinner";
+import { clearCurrent, get_blog_by_id } from "../redux/reducers/blogReducer";
 
 const Blog = (props) => {
   const id = props.match.params.id;
 
-  const { blogs, loading } = useSelector((state) => state.root.blogs);
-  const [blog, setBlog] = useState(blogs ? blogs.find((blog) => blog._id === id) : {});
+  const { current, loading } = useSelector((state) => state.root.blogs);
+  const { user, isAuthenticated } = useSelector((state) => state.root.users);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(load_user());
-    dispatch(get_blogs());
+    dispatch(get_blog_by_id(id));
 
-    if (blogs) {
-      setBlog(blogs.find((blog) => blog._id === id));
-    }
+    return () => {
+      dispatch(clearCurrent());
+    };
+
     // eslint-disable-next-line
-  }, [loading]);
+  }, [get_blog_by_id, loading]);
 
-  return !blog ? (
-    <p>N/A</p>
+  return loading ? (
+    <Spinner />
   ) : (
-    <div>
-      <div className="flex items-center justify-end gap-5">
-        <DeleteBlogBtn id={blog._id} />
-        <Link to={`/updateblog/${id}`} className="p-0 focus:outline-none">
-          <i className="text-purple-500 material-icons hover:text-purple-700">edit</i>
-        </Link>
+    current && (
+      <div>
+        {user && user._id === current.user && isAuthenticated && (
+          <div className="flex items-center justify-end gap-8">
+            <DeleteBlogBtn id={current._id} />
+            <Link to={`/updateblog/${id}`} className="flex items-center gap-1 p-0 focus:outline-none">
+              <i className="text-2xl text-purple-500 material-icons hover:text-purple-700">edit</i>
+              <span>Edit blog</span>
+            </Link>
+          </div>
+        )}
+        <h1 className="mt-8 text-2xl text-center text-gray-900">{current.heading}</h1>
+        <h1 className="mt-2 text-base text-center text-gray-600">{current.subheading}</h1>
+        <p className="text-base text-gray-800 mt-7">{current.body}</p>
       </div>
-      <h1 className="text-2xl text-center text-gray-900">{blog.heading}</h1>
-      <h1 className="mt-2 text-base text-center text-gray-600">{blog.subheading}</h1>
-      <p className="text-base text-gray-800 mt-7">{blog.body}</p>
-    </div>
+    )
   );
 };
 
