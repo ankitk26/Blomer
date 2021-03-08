@@ -31,7 +31,7 @@ const DeleteBlogBtn = ({ id }) => {
 
   const handleDelete = () => {
     dispatch(delete_blog(id));
-    history.push("/myblogs");
+    history.push("/dashboard");
   };
 
   return (

@@ -11,13 +11,12 @@ const blogSchema = new Schema(
       type: String,
       required: [true, "Heading is required"],
     },
-    subheading: {
-      type: String,
-    },
+    subheading: String,
     body: {
       type: String,
       required: [true, "Body of the blog is required"],
     },
+    tags: [String],
   },
   { timestamps: true }
 );

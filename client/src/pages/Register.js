@@ -7,6 +7,7 @@ import { clearErrors, register_user } from "../redux/reducers/userReducer";
 const Register = (props) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
@@ -14,17 +15,18 @@ const Register = (props) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      props.history.push("/myblogs");
+      props.history.push("/dashboard");
     }
 
     return () => {
       dispatch(clearErrors());
     };
+    // eslint-disable-next-line
   }, [isAuthenticated, props.history]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(register_user({ email, username, password }));
+    dispatch(register_user({ email, username, name, password }));
   };
 
   return (
@@ -39,6 +41,7 @@ const Register = (props) => {
           onChange={setUsername}
           error={errors && errors.username}
         />
+        <FormControl htmlFor="name" type="text" value={name} onChange={setName} error={errors && errors.name} />
         <FormControl
           htmlFor="password"
           type="password"

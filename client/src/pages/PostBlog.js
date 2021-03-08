@@ -1,5 +1,7 @@
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import BlogTagsInput from "../components/blog/BlogTagsInput";
 import { add_blog } from "../redux/reducers/blogReducer";
 
 const PostBlog = (props) => {
@@ -7,6 +9,7 @@ const PostBlog = (props) => {
     heading: "",
     subheading: "",
     body: "",
+    tags: [],
   });
 
   const dispatch = useDispatch();
@@ -19,7 +22,7 @@ const PostBlog = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(add_blog(blog));
-    props.history.push("/myblogs");
+    props.history.push("/dashboard");
   };
 
   return (
@@ -40,7 +43,7 @@ const PostBlog = (props) => {
           />
           <span className="mt-2 text-sm font-bold text-red-600">{blogErrors && blogErrors.heading}</span>
         </div>
-        <div className="flex flex-col w-full my-5">
+        <div className="flex flex-col w-full mb-5">
           <label htmlFor="subheading">Subheading</label>
           <input
             type="text"
@@ -52,19 +55,25 @@ const PostBlog = (props) => {
             onChange={handleChange}
           />
         </div>
-        <div className="flex flex-col w-full">
+
+        <div className="flex flex-col w-full mb-5">
           <label htmlFor="body">Body</label>
-          <textarea
+          <TextareaAutosize
             id="body"
             name="body"
-            className={`form-control-blog h-36 ${blogErrors && "border border-red-600 text-red-600"}}`}
+            rowsMin={5}
+            className={`form-control-blog resize-none overflow-hidden h-36 ${
+              blogErrors && "border border-red-600 text-red-600"
+            }}`}
             placeholder="Body of the blog"
             value={blog.body}
             onChange={handleChange}
           />
+
           <span className="mt-2 text-sm font-bold text-red-600">{blogErrors && blogErrors.body}</span>
         </div>
-        <button type="submit" className="mt-5 btn-purple">
+        <BlogTagsInput tags={blog.tags} blog={blog} setBlog={setBlog} />
+        <button type="button" className="my-10 btn-purple" onClick={handleSubmit}>
           Add blog
         </button>
       </form>

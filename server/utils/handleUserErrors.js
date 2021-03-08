@@ -1,6 +1,5 @@
 module.exports = (err) => {
-  let errors = { email: "", username: "", password: "" };
-
+  let errors = { email: "", username: "", name: "", password: "" };
   if (err.message === "password incorrect") {
     errors["password"] = "Incorrect password";
   }
@@ -9,8 +8,13 @@ module.exports = (err) => {
     errors["email"] = "User not registered";
   }
 
-  if (err.code === 11000) {
+  if (err.code === 11000 && err.message.includes("email")) {
     errors["email"] = "User already registered";
+    return errors;
+  }
+
+  if (err.code === 11000 && err.message.includes("username")) {
+    errors["username"] = "Username already taken";
     return errors;
   }
 

@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import setAuthToken from "../../utils/setAuthToken";
 
 const initialState = {
   allBlogs: null,
   blogs: null,
   blogErrors: null,
-  loading: true,
+  blogLoading: false,
   current: null,
 };
 
@@ -14,17 +13,20 @@ const blogSlice = createSlice({
   name: "blogs",
   initialState,
   reducers: {
+    startFetching: (state) => {
+      state.blogLoading = true;
+    },
     getAllBlogs: (state, action) => {
       state.allBlogs = action.payload;
-      state.loading = false;
+      state.blogLoading = false;
     },
-    getBlogs: (state, action) => {
+    getCurrentUserBlogs: (state, action) => {
       state.blogs = action.payload;
-      state.loading = false;
+      state.blogLoading = false;
     },
     getBlogById: (state, action) => {
       state.current = action.payload;
-      state.loading = false;
+      state.blogLoading = false;
     },
     clearCurrent: (state) => {
       state.current = null;
@@ -37,11 +39,13 @@ const blogSlice = createSlice({
       state.blogErrors = action.payload;
     },
     updateBlog: (state, action) => {
-      const { _id, heading, subheading, body } = action.payload;
+      const { _id, heading, subheading, body, tags } = action.payload;
       const blog = state.blogs.find((blog) => blog._id === _id);
+      // blog = {...blog, action.payload};
       blog.heading = heading;
       blog.subheading = subheading;
       blog.body = body;
+      blog.tags = tags;
       state.blogErrors = null;
     },
     deleteBlog: (state, action) => {
@@ -58,20 +62,17 @@ const blogSlice = createSlice({
 export const get_all_blogs = () => async (dispatch) => {
   try {
     const res = await axios.get("/blogs");
+    console.log(res.data);
     dispatch(getAllBlogs(res.data));
   } catch (err) {
     console.log(err);
   }
 };
 
-export const get_blogs = () => async (dispatch) => {
+export const get_current_user_blogs = () => async (dispatch) => {
   try {
-    if (localStorage.token) {
-      setAuthToken(localStorage.token);
-    }
     const res = await axios.get("/blogs/user");
-    console.log(res.data);
-    dispatch(getBlogs(res.data));
+    dispatch(getCurrentUserBlogs(res.data));
   } catch (err) {
     console.log(err);
   }
@@ -80,6 +81,7 @@ export const get_blogs = () => async (dispatch) => {
 export const get_blog_by_id = (id) => async (dispatch) => {
   try {
     const res = await axios.get(`/blogs/${id}`);
+    console.log(res.data);
     dispatch(getBlogById(res.data));
   } catch (err) {
     console.log(err);
@@ -95,8 +97,8 @@ export const add_blog = (blog) => async (dispatch) => {
 
   const body = JSON.stringify(blog);
   try {
-    const res = await axios.post("/blogs", body, config);
-    dispatch(addBlog(res.data));
+    await axios.post("/blogs", body, config);
+    // dispatch(addBlog(res.data));
   } catch (err) {
     dispatch(addBlogError(err.response.data));
   }
@@ -104,8 +106,8 @@ export const add_blog = (blog) => async (dispatch) => {
 
 export const delete_blog = (id) => async (dispatch) => {
   try {
-    const res = await axios.delete(`/blogs/${id}`);
-    dispatch(deleteBlog(res.data._id));
+    await axios.delete(`/blogs/${id}`);
+    // dispatch(deleteBlog(res.data._id));
   } catch (err) {
     console.log(err);
   }
@@ -120,16 +122,18 @@ export const update_blog = (blog) => async (dispatch) => {
 
   const body = JSON.stringify(blog);
   try {
-    const res = await axios.post(`/blogs/update/${blog.id}`, body, config);
+    const res = await axios.post(`/blogs/update/${blog._id}`, body, config);
     dispatch(updateBlog(res.data));
+    console.log(res.data);
   } catch (err) {
     dispatch(addBlogError(err.response.data));
   }
 };
 
 export const {
+  startFetching,
   getAllBlogs,
-  getBlogs,
+  getCurrentUserBlogs,
   getBlogById,
   clearCurrent,
   addBlog,

@@ -8,6 +8,7 @@ const initialState = {
   isAuthenticated: false,
   loading: true,
   errors: null,
+  profile: null,
 };
 
 const userSlice = createSlice({
@@ -66,6 +67,10 @@ const userSlice = createSlice({
     clearErrors: (state) => {
       state.errors = null;
     },
+    loadProfile: (state, action) => {
+      state.profile = action.payload;
+      state.loading = false;
+    },
   },
 });
 
@@ -81,14 +86,14 @@ export const load_user = () => async (dispatch) => {
   }
 };
 
-export const register_user = ({ email, username, password }) => async (dispatch) => {
+export const register_user = ({ email, username, name, password }) => async (dispatch) => {
   try {
     const config = {
       headers: {
         "Content-type": "application/json",
       },
     };
-    const body = JSON.stringify({ email, username, password });
+    const body = JSON.stringify({ email, username, name, password });
     const res = await axios.post("/users/register", body, config);
     dispatch(registerSuccess(res.data));
     dispatch(load_user());
@@ -113,6 +118,15 @@ export const login_user = ({ email, password }) => async (dispatch) => {
   }
 };
 
+export const get_user_profile = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/users/profile/${id}`);
+    dispatch(loadProfile(res.data));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const {
   loadUser,
   loadUserFail,
@@ -122,6 +136,7 @@ export const {
   loginFail,
   logout,
   clearErrors,
+  loadProfile,
 } = userSlice.actions;
 
 export default userSlice.reducer;

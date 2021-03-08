@@ -13,13 +13,26 @@ const userSchema = new Schema({
   },
   username: {
     type: String,
+    unique: true,
     required: [true, "Username is required"],
+    minlength: [3, "Username should be atleast 6 characters long"],
+  },
+  name: {
+    type: String,
+    required: [true, "Name is required"],
   },
   password: {
     type: String,
     required: [true, "Password is required"],
     minlength: [6, "Password should be atleast 6 characters long"],
   },
+  bio: String,
+  blogs: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "blogs",
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {

@@ -4,12 +4,13 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import Navbar from "./layouts/Navbar";
 import Blog from "./pages/Blog";
+import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import PostBlog from "./pages/PostBlog";
 import Register from "./pages/Register";
 import UpdateBlog from "./pages/UpdateBlog";
-import UserBlogs from "./pages/UserBlogs";
+import UserProfile from "./pages/UserProfile";
 import { load_user, logout } from "./redux/reducers/userReducer";
 import store from "./redux/store";
 import setAuthToken from "./utils/setAuthToken";
@@ -39,7 +40,8 @@ const App = () => {
               <Route path="/blogs/:id" component={Blog} />
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
-              <PrivateRoute path="/myblogs" component={UserBlogs} />
+              <Route path="/users/profile/:id" component={UserProfile} />
+              <PrivateRoute path="/dashboard" component={Dashboard} />
               <PrivateRoute path="/postblog" component={PostBlog} />
               <PrivateRoute path="/updateblog/:id" component={UpdateBlog} />
             </div>

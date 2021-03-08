@@ -13,12 +13,13 @@ const Login = (props) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      props.history.push("/myblogs");
+      props.history.push("/dashboard");
     }
 
     return () => {
       dispatch(clearErrors());
     };
+    // eslint-disable-next-line
   }, [isAuthenticated, props.history]);
 
   const handleSubmit = (e) => {

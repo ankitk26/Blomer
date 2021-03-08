@@ -6,7 +6,7 @@ import { clearBlogs } from "../redux/reducers/blogReducer";
 import { logout } from "../redux/reducers/userReducer";
 
 const Navbar = () => {
-  const { isAuthenticated, user, loading } = useSelector((state) => state.root.users);
+  const { isAuthenticated, user } = useSelector((state) => state.root.users);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -24,7 +24,7 @@ const Navbar = () => {
       </div>
 
       <NavItem route="/postblog" icon="post_add" text="Post blog" />
-      <NavItem route="/myblogs" icon="notes" text="My blogs" />
+      <NavItem route="/dashboard" icon="account_circle" text="Dashboard" />
 
       <button
         className="flex items-center gap-2 cursor-pointer hover:text-purple-200 focus:outline-none"
@@ -44,12 +44,14 @@ const Navbar = () => {
   );
 
   return (
-    <nav className="flex items-center justify-between px-6 py-3 bg-purple-700">
-      <Link to="/">
-        <h1 className="text-2xl cursor-pointer text-gray-50 hover:text-purple-200">Blomer</h1>
-      </Link>
-      <div className="flex items-center gap-10 text-gray-50">{isAuthenticated ? authenticatedLinks : guestLinks}</div>
-    </nav>
+    <header className="bg-purple-700">
+      <nav className="flex items-center justify-between w-11/12 py-3 mx-auto">
+        <Link to="/">
+          <h1 className="text-2xl cursor-pointer text-gray-50 hover:text-purple-200">Blomer</h1>
+        </Link>
+        <div className="flex items-center gap-10 text-gray-50">{isAuthenticated ? authenticatedLinks : guestLinks}</div>
+      </nav>
+    </header>
   );
 };
 

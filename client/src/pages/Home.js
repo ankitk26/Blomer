@@ -10,6 +10,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(get_all_blogs());
+    // eslint-disable-next-line
   }, [get_all_blogs]);
 
   return (
@@ -22,24 +23,13 @@ const Home = () => {
         (allBlogs.length === 0 ? (
           <p className="mt-5 text-sm text-gray-600">No blogs available right now</p>
         ) : (
-          <div className="grid grid-cols-3 gap-5 mt-8">
+          <div className="grid grid-cols-3 gap-10 mt-8">
             {allBlogs.map((blog) => (
               <BlogItem key={blog._id} blog={blog} />
             ))}{" "}
           </div>
         ))
       )}
-      {/* {loading ? (
-          <Spinner /> 
-        ) : (
-          allBlogs &&
-          (allBlogs.length === 0 ? (
-            <p className="text-sm text-gray-600">No blogs available right now</p>) : 
-          <div className="grid grid-cols-3 gap-5 mt-8">
-            allBlogs.map((blog) => <BlogItem key={blog._id} blog={blog} />
-          )
-        })
-        </div> */}
     </>
   );
 };
