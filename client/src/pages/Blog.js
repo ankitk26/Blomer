@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import BlogComments from "../components/blog/BlogComments";
 import DeleteBlogBtn from "../components/blog/DeleteBlogBtn";
 import Spinner from "../layouts/Spinner";
 import { clearCurrent, get_blog_by_id } from "../redux/reducers/blogReducer";
@@ -59,6 +60,7 @@ const Blog = (props) => {
             </span>
           ))}
         </div>
+        <BlogComments blogId={id} />
       </div>
     )
   );

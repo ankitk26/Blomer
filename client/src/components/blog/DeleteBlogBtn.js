@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { delete_blog } from "../../redux/reducers/blogReducer";
+import { delete_comment } from "../../redux/reducers/commentReducer";
 
 const customStyles = {
   content: {
@@ -21,7 +22,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const DeleteBlogBtn = ({ id }) => {
+const DeleteBlogBtn = ({ id, collection }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -30,21 +31,34 @@ const DeleteBlogBtn = ({ id }) => {
   const closeModal = () => setIsOpen(false);
 
   const handleDelete = () => {
-    dispatch(delete_blog(id));
-    history.push("/dashboard");
+    if (collection === "comment") {
+      dispatch(delete_comment(id));
+    } else {
+      dispatch(delete_blog(id));
+      history.push("/dashboard");
+    }
+    closeModal();
   };
 
   return (
     <>
-      <button className="flex items-center gap-1 p-0 focus:outline-none" onClick={openModal}>
-        <i className="text-purple-500 material-icons hover:text-purple-700">delete</i>
-        <span>Delete blog</span>
-      </button>
+      {collection === "comment" ? (
+        <button type="button" className="text-xs font-bold text-purple-700 focus:outline-none" onClick={openModal}>
+          Delete
+        </button>
+      ) : (
+        <button className="flex items-center gap-1 p-0 focus:outline-none" onClick={openModal}>
+          <i className="text-purple-500 material-icons hover:text-purple-700">delete</i>
+          <span>Delete blog</span>
+        </button>
+      )}
       <Modal isOpen={isOpen} style={customStyles} onRequestClose={closeModal} contentLabel="Delete confirmation modal">
         <button className="float-right focus:outline-none" onClick={closeModal}>
           <i className="text-gray-800 cursor-pointer hover:text-gray-900 material-icons">close</i>
         </button>
-        <h1 className="text-2xl text-gray-900">Confirm deletion of the blog</h1>
+        <h1 className="text-2xl text-gray-900">
+          {collection === "comment" ? "Confirm deletion of comment" : "Confirm deletion of the blog"}
+        </h1>
         <div className="flex items-center gap-5 mt-5">
           <button className="btn-purple" onClick={handleDelete}>
             Delete

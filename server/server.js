@@ -7,6 +7,7 @@ require("dotenv").config();
 // Routes import
 const blogRoutes = require("./routes/blogRoutes");
 const userRoutes = require("./routes/userRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 
 // Middleware
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cors());
 // Routes
 app.use("/blogs", blogRoutes);
 app.use("/users", userRoutes);
+app.use("/comment", commentRoutes);
 
 // Connect database
 mongoose
