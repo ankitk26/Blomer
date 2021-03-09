@@ -14,7 +14,7 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(get_current_user_blogs());
     // eslint-disable-next-line
-  }, [get_current_user_blogs]);
+  }, [loading]);
 
   return loading ? (
     <Spinner />

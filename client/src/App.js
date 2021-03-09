@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import PostBlog from "./pages/PostBlog";
 import Register from "./pages/Register";
 import UpdateBlog from "./pages/UpdateBlog";
+import UpdateProfile from "./pages/UpdateProfile";
 import UserProfile from "./pages/UserProfile";
 import { load_user, logout } from "./redux/reducers/userReducer";
 import store from "./redux/store";
@@ -44,6 +45,7 @@ const App = () => {
               <PrivateRoute path="/dashboard" component={Dashboard} />
               <PrivateRoute path="/postblog" component={PostBlog} />
               <PrivateRoute path="/updateblog/:id" component={UpdateBlog} />
+              <PrivateRoute path="/updateprofile" component={UpdateProfile} />
             </div>
           </>
         </Switch>

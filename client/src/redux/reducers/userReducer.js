@@ -71,6 +71,12 @@ const userSlice = createSlice({
       state.profile = action.payload;
       state.loading = false;
     },
+    updateUser: (state, action) => {
+      console.log(state.user, action.payload);
+      state.user = action.payload;
+      state.loading = false;
+      state.isAuthenticated = true;
+    },
   },
 });
 
@@ -127,6 +133,23 @@ export const get_user_profile = (id) => async (dispatch) => {
   }
 };
 
+export const update_user_profile = ({ email, name, bio }) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const body = JSON.stringify({ email, name, bio });
+    const res = await axios.post("/users/update", body, config);
+    console.log(res.data);
+    dispatch(updateUser(res.data));
+    dispatch(load_user());
+  } catch (err) {
+    dispatch(loginFail(err.response.data));
+  }
+};
+
 export const {
   loadUser,
   loadUserFail,
@@ -137,6 +160,7 @@ export const {
   logout,
   clearErrors,
   loadProfile,
+  updateUser,
 } = userSlice.actions;
 
 export default userSlice.reducer;

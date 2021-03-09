@@ -23,6 +23,7 @@ const AddCommentForm = ({ blogId }) => {
     } else {
       setError("Login to post comments");
     }
+    setComment("");
   };
 
   const cancelComment = () => {
