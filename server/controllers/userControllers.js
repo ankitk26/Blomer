@@ -53,10 +53,13 @@ const getUser = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const id = req.params.id;
+  const username = req.params.username;
   try {
-    const blogs = await Blog.find({ user: id }).select("heading subheading createdAt");
-    const user = await User.findById(id).select("-password");
+    const user = await User.findOne({ username }).select("-password");
+    if (!user) {
+      throw Error("User not found");
+    }
+    const blogs = await Blog.find({ user: user._id }).select("heading subheading updatedAt");
     user.blogs = blogs;
     res.status(200).json(user);
   } catch (err) {
@@ -67,11 +70,21 @@ const getUserProfile = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
   const { email, name, bio } = req.body;
+  const user = await User.findById(req.user.id);
+
+  let photo = user.photo;
+  const tempName = name.split(" ").join("%20");
+  if (user.name !== name) {
+    photo = `https://avatars.dicebear.com/api/initials/${tempName}.svg`;
+  }
+
   try {
-    const user = await User.findOneAndUpdate({ _id: req.user.id }, { email, name, bio }, { new: true }).select(
-      "-password"
-    );
-    res.status(200).json(user);
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { email, name, bio, photo },
+      { new: true }
+    ).select("-password");
+    res.status(200).json(updatedUser);
   } catch (err) {
     const errors = handleUserErrors(err);
     res.status(500).json(errors);

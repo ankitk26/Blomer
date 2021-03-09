@@ -20,42 +20,24 @@ const userSlice = createSlice({
       state.loading = false;
       state.user = action.payload;
     },
-    registerSuccess: (state, action) => {
+    loadProfile: (state, action) => {
+      state.profile = action.payload;
+      state.loading = false;
+    },
+    authSuccess: (state, action) => {
       localStorage.setItem("token", action.payload.token);
       state.isAuthenticated = true;
       state.loading = false;
       state.token = action.payload.token;
       state.errors = null;
     },
-    loginSuccess: (state, action) => {
-      localStorage.setItem("token", action.payload.token);
-      state.isAuthenticated = true;
-      state.loading = false;
-      state.token = action.payload.token;
-      state.errors = null;
-    },
-    registerFail: (state, action) => {
+    authFail: (state, action) => {
       localStorage.removeItem("token");
       state.token = null;
       state.isAuthenticated = false;
       state.loading = false;
       state.user = null;
       state.errors = action.payload;
-    },
-    loginFail: (state, action) => {
-      localStorage.removeItem("token");
-      state.token = null;
-      state.isAuthenticated = false;
-      state.loading = false;
-      state.user = null;
-      state.errors = action.payload;
-    },
-    loadUserFail: (state) => {
-      localStorage.removeItem("token");
-      state.token = null;
-      state.isAuthenticated = false;
-      state.loading = false;
-      state.user = null;
     },
     logout: (state) => {
       localStorage.removeItem("token");
@@ -64,18 +46,13 @@ const userSlice = createSlice({
       state.loading = false;
       state.user = null;
     },
-    clearErrors: (state) => {
-      state.errors = null;
-    },
-    loadProfile: (state, action) => {
-      state.profile = action.payload;
-      state.loading = false;
-    },
     updateUser: (state, action) => {
-      console.log(state.user, action.payload);
       state.user = action.payload;
       state.loading = false;
       state.isAuthenticated = true;
+    },
+    clearErrors: (state) => {
+      state.errors = null;
     },
   },
 });
@@ -88,7 +65,7 @@ export const load_user = () => async (dispatch) => {
     const res = await axios.get("/users/user");
     dispatch(loadUser(res.data));
   } catch (err) {
-    dispatch(loadUserFail(err));
+    dispatch(logout(err.response.data));
   }
 };
 
@@ -101,10 +78,10 @@ export const register_user = ({ email, username, name, password }) => async (dis
     };
     const body = JSON.stringify({ email, username, name, password });
     const res = await axios.post("/users/register", body, config);
-    dispatch(registerSuccess(res.data));
+    dispatch(authSuccess(res.data));
     dispatch(load_user());
   } catch (err) {
-    dispatch(registerFail(err.response.data));
+    dispatch(authFail(err.response.data));
   }
 };
 
@@ -117,16 +94,16 @@ export const login_user = ({ email, password }) => async (dispatch) => {
     };
     const body = JSON.stringify({ email, password });
     const res = await axios.post("/users/login", body, config);
-    dispatch(loginSuccess(res.data));
+    dispatch(authSuccess(res.data));
     dispatch(load_user());
   } catch (err) {
-    dispatch(loginFail(err.response.data));
+    dispatch(authFail(err.response.data));
   }
 };
 
-export const get_user_profile = (id) => async (dispatch) => {
+export const get_user_profile = (username) => async (dispatch) => {
   try {
-    const res = await axios.get(`/users/profile/${id}`);
+    const res = await axios.get(`/users/profile/${username}`);
     dispatch(loadProfile(res.data));
   } catch (err) {
     console.log(err);
@@ -142,25 +119,13 @@ export const update_user_profile = ({ email, name, bio }) => async (dispatch) =>
     };
     const body = JSON.stringify({ email, name, bio });
     const res = await axios.post("/users/update", body, config);
-    console.log(res.data);
     dispatch(updateUser(res.data));
     dispatch(load_user());
   } catch (err) {
-    dispatch(loginFail(err.response.data));
+    dispatch(authFail(err.response.data));
   }
 };
 
-export const {
-  loadUser,
-  loadUserFail,
-  registerSuccess,
-  registerFail,
-  loginSuccess,
-  loginFail,
-  logout,
-  clearErrors,
-  loadProfile,
-  updateUser,
-} = userSlice.actions;
+export const { loadUser, authSuccess, authFail, logout, clearErrors, loadProfile, updateUser } = userSlice.actions;
 
 export default userSlice.reducer;

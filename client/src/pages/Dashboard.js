@@ -22,7 +22,7 @@ const Dashboard = () => {
     user && (
       <>
         <h1 className="text-3xl text-gray-800">{user.name}</h1>
-        <div className="grid grid-cols-4 gap-32 mt-8">
+        <div className="grid grid-cols-6 gap-32 mt-8">
           <ProfileInfo profile={user} />
           <ProfileBlogs blogs={blogs} />
         </div>

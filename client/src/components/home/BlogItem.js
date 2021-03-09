@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import thumbnail from "../../assets/images/default_thumnail.jpg";
 
-const BlogItem = ({ blog, userid }) => {
+const BlogItem = ({ blog }) => {
   return (
     <div className="pb-5 bg-gray-100 shadow-sm hover:shadow-lg">
       <img src={thumbnail} alt="Blog thumbnail" className="w-full" />
@@ -12,7 +12,7 @@ const BlogItem = ({ blog, userid }) => {
             {blog.heading}
           </h1>
         </Link>
-        <Link to={`/users/profile/${blog.user._id}`}>
+        <Link to={`/users/profile/${blog.user.username}`}>
           <h3 className="text-sm text-gray-500">
             by <span className="hover:underline">{blog.user.name}</span>
           </h3>

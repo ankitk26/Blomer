@@ -5,7 +5,7 @@ const handleBlogErrors = require("../utils/handleBlogErrors");
 
 const getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().populate("user", ["username", "name"]);
+    const blogs = await Blog.find().populate("user", ["username", "name", "photo"]);
     res.status(200).json(blogs);
   } catch (err) {
     console.log(err.message);

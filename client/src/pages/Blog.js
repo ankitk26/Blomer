@@ -40,26 +40,35 @@ const Blog = (props) => {
           </div>
         )}
         <h1 className="mt-8 text-5xl text-gray-800 uppercase">{current.heading}</h1>
-        <h1 className="mt-2 text-xl text-gray-600">{current.subheading}</h1>
-        <div className="flex items-center gap-5 mt-5">
-          <h5 className="text-sm font-bold text-gray-800 uppercase">
-            by{" "}
-            <Link to={`/users/profile/${current.user._id}`} className="hover:underline">
-              {current.user.name}
-            </Link>
-          </h5>
-          <h4 className="text-sm text-gray-600">{parseDate(current.createdAt)}</h4>
-        </div>
-        <div className="mt-3 w-10 h-0.5 bg-purple-700" />
-        <p className="font-serif text-base text-gray-800 my-7">{current.body}</p>
+        <h1 className="mt-1 text-base text-gray-700">{current.subheading}</h1>
 
-        <div className="flex items-center gap-5 mt-10">
+        <div className="flex items-center gap-5 my-3">
           {current.tags.map((tag, index) => (
-            <span key={index} className="px-4 py-1 text-sm text-gray-800 bg-gray-200">
+            <span key={index} className="p-0.5 text-xs text-gray-800 bg-gray-200">
               {tag}
             </span>
           ))}
         </div>
+
+        <h5 className="text-sm font-bold text-gray-800">
+          by{" "}
+          <Link to={`/users/profile/${current.user.username}`} className="hover:underline">
+            {current.user.name}
+          </Link>
+        </h5>
+
+        <div className="flex items-center gap-5 mt-1">
+          {current.createdAt !== current.updatedAt && (
+            <h4 className="text-sm text-gray-600">Updated on {parseDate(current.updatedAt)}</h4>
+          )}
+          {current.createdAt !== current.updatedAt && "|"}
+          <h4 className="text-sm text-gray-600">Posted on {parseDate(current.createdAt)}</h4>
+        </div>
+
+        {/* <div className="mt-3 w-10 h-0.5 bg-purple-700" /> */}
+
+        <p className="my-10 font-serif text-base text-gray-800">{current.body}</p>
+        <hr />
         <BlogComments blogId={id} />
       </div>
     )

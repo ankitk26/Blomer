@@ -21,7 +21,12 @@ app.use("/comment", commentRoutes);
 
 // Connect database
 mongoose
-  .connect(process.env.MONGODB_URI, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGODB_URI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
   .then(() => console.log("Database connected"))
   .catch((err) => console.log(err));
 

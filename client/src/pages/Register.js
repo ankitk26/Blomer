@@ -30,7 +30,7 @@ const Register = (props) => {
   };
 
   return (
-    <div className="text-center">
+    <div className="mb-10 text-center">
       <h1 className="text-2xl text-gray-700">Register</h1>
       <form onSubmit={handleSubmit}>
         <FormControl htmlFor="email" type="email" value={email} onChange={setEmail} error={errors && errors.email} />

@@ -27,6 +27,7 @@ const userSchema = new Schema({
     minlength: [6, "Password should be atleast 6 characters long"],
   },
   bio: String,
+  photo: String,
   blogs: [
     {
       type: Schema.Types.ObjectId,
@@ -38,6 +39,8 @@ const userSchema = new Schema({
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
+  const name = this.name.split(" ").join("%20");
+  this.photo = `https://avatars.dicebear.com/api/initials/${name}.svg`;
   next();
 });
 

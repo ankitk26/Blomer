@@ -41,7 +41,7 @@ const App = () => {
               <Route path="/blogs/:id" component={Blog} />
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
-              <Route path="/users/profile/:id" component={UserProfile} />
+              <Route path="/users/profile/:username" component={UserProfile} />
               <PrivateRoute path="/dashboard" component={Dashboard} />
               <PrivateRoute path="/postblog" component={PostBlog} />
               <PrivateRoute path="/updateblog/:id" component={UpdateBlog} />

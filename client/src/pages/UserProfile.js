@@ -6,14 +6,14 @@ import Spinner from "../layouts/Spinner";
 import { get_user_profile } from "../redux/reducers/userReducer";
 
 const UserProfile = (props) => {
-  const id = props.match.params.id;
+  const username = props.match.params.username;
   console.log(props);
   const dispatch = useDispatch();
 
   const { loading, profile } = useSelector((state) => state.root.users);
 
   useEffect(() => {
-    dispatch(get_user_profile(id));
+    dispatch(get_user_profile(username));
     // eslint-disable-next-line
   }, [get_user_profile]);
 
@@ -23,7 +23,7 @@ const UserProfile = (props) => {
     profile && (
       <>
         <h1 className="text-3xl text-gray-800">{profile.name}</h1>
-        <div className="grid grid-cols-4 gap-32 mt-8">
+        <div className="grid grid-cols-6 gap-32 mt-8">
           <ProfileInfo profile={profile} />
           <ProfileBlogs blogs={profile.blogs} />
         </div>
